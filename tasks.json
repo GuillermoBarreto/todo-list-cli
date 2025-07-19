@@ -1,0 +1,14 @@
+[
+    {
+        "title": "order a galon of milk",
+        "completed": true,
+        "due_date": "",
+        "priority": "high"
+    },
+    {
+        "title": "clean my depa",
+        "completed": true,
+        "due_date": "",
+        "priority": "low"
+    }
+]
