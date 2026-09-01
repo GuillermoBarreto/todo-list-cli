@@ -1,16 +1,16 @@
 import json
-import os
+from pathlib import Path
 
-TASKS_FILE = "tasks.json"
+TASKS_FILE = Path(__file__).with_name("tasks.json")
 
 def load_tasks():
-    if os.path.exists(TASKS_FILE):
-        with open(TASKS_FILE, "r") as file:
+    if TASKS_FILE.exists():
+        with TASKS_FILE.open("r", encoding="utf-8") as file:
             return json.load(file)
     return []
 
 def save_tasks(tasks):
-    with open(TASKS_FILE, "w") as file:
+    with TASKS_FILE.open("w", encoding="utf-8") as file:
         json.dump(tasks, file, indent=4)
 
 def show_tasks(tasks):
@@ -18,30 +18,48 @@ def show_tasks(tasks):
         print("No tasks yet!")
         return
     for i, task in enumerate(tasks):
-        status = "✓" if task["done"] else "✗"
+        status = "x" if task["done"] else " "
         print(f"{i + 1}. [{status}] {task['title']}")
 
 def add_task(tasks):
-    title = input("Enter task: ")
+    title = input("Enter task: ").strip()
+    if not title:
+        print("Task cannot be empty.")
+        return
     tasks.append({"title": title, "done": False})
     save_tasks(tasks)
     print("Task added!")
 
-def complete_task(tasks):
+def choose_task(tasks, prompt):
     show_tasks(tasks)
-    index = int(input("Enter task number to complete: ")) - 1
-    if 0 <= index < len(tasks):
-        tasks[index]["done"] = True
-        save_tasks(tasks)
-        print("Task marked as done!")
+    if not tasks:
+        return None
+    try:
+        index = int(input(prompt)) - 1
+    except ValueError:
+        print("Please enter a valid task number.")
+        return None
+    if not 0 <= index < len(tasks):
+        print("Task number is out of range.")
+        return None
+    return index
+
+
+def complete_task(tasks):
+    index = choose_task(tasks, "Enter task number to complete: ")
+    if index is None:
+        return
+    tasks[index]["done"] = True
+    save_tasks(tasks)
+    print("Task marked as done!")
 
 def delete_task(tasks):
-    show_tasks(tasks)
-    index = int(input("Enter task number to delete: ")) - 1
-    if 0 <= index < len(tasks):
-        removed = tasks.pop(index)
-        save_tasks(tasks)
-        print(f"Deleted: {removed['title']}")
+    index = choose_task(tasks, "Enter task number to delete: ")
+    if index is None:
+        return
+    removed = tasks.pop(index)
+    save_tasks(tasks)
+    print(f"Deleted: {removed['title']}")
 
 def main():
     tasks = load_tasks()
