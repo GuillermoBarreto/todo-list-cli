@@ -49,6 +49,9 @@ def complete_task(tasks):
     index = choose_task(tasks, "Enter task number to complete: ")
     if index is None:
         return
+    if tasks[index]["done"]:
+        print("Task is already complete.")
+        return
     tasks[index]["done"] = True
     save_tasks(tasks)
     print("Task marked as done!")
