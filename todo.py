@@ -72,7 +72,12 @@ def main():
     tasks = load_tasks()
     while True:
         print("\n1. View Tasks\n2. Add Task\n3. Complete Task\n4. Delete Task\n5. Exit")
-        choice = input("Choose: ")
+        try:
+            choice = input("Choose: ").strip()
+        except EOFError:
+            # Ctrl+D or ended piped input: exit cleanly instead of a traceback.
+            print()
+            break
         if choice == "1":
             show_tasks(tasks)
         elif choice == "2":
