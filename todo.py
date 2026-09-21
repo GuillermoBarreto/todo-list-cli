@@ -5,8 +5,12 @@ TASKS_FILE = Path(__file__).with_name("tasks.json")
 
 def load_tasks():
     if TASKS_FILE.exists():
-        with TASKS_FILE.open("r", encoding="utf-8") as file:
-            return json.load(file)
+        try:
+            with TASKS_FILE.open("r", encoding="utf-8") as file:
+                return json.load(file)
+        except json.JSONDecodeError:
+            print("Warning: tasks.json is corrupted. Starting with an empty task list.")
+            return []
     return []
 
 def save_tasks(tasks):
