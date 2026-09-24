@@ -22,8 +22,8 @@ def show_tasks(tasks):
         print("No tasks yet!")
         return
     for i, task in enumerate(tasks):
-        status = "x" if task["done"] else " "
-        print(f"{i + 1}. [{status}] {task['title']}")
+        status = "x" if task.get("done", False) else " "
+        print(f"{i + 1}. [{status}] {task.get('title', '(untitled)')}")
 
 def add_task(tasks):
     title = input("Enter task: ").strip()
@@ -53,7 +53,7 @@ def complete_task(tasks):
     index = choose_task(tasks, "Enter task number to complete: ")
     if index is None:
         return
-    if tasks[index]["done"]:
+    if tasks[index].get("done", False):
         print("Task is already complete.")
         return
     tasks[index]["done"] = True
