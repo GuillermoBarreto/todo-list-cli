@@ -1,5 +1,11 @@
-import json
-from pathlib import Path
+"""A tiny terminal to-do list.
+
+Tasks are stored as JSON in ``tasks.json`` next to this script.
+
+Usage:
+    python todo.py
+
+Choose from the menu to view, add, complete, or delete tasks.
 
 TASKS_FILE = Path(__file__).with_name("tasks.json")
 
