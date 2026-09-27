@@ -6,6 +6,7 @@ Usage:
     python todo.py
 
 Choose from the menu to view, add, complete, or delete tasks.
+"""
 
 TASKS_FILE = Path(__file__).with_name("tasks.json")
 
