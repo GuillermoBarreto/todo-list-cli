@@ -73,7 +73,7 @@ def delete_task(tasks):
         return
     removed = tasks.pop(index)
     save_tasks(tasks)
-    print(f"Deleted: {removed['title']}")
+    print(f"Deleted: {removed.get('title', '(untitled)') if isinstance(removed, dict) else removed}")
 
 def main():
     tasks = load_tasks()
