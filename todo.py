@@ -50,6 +50,9 @@ def choose_task(tasks, prompt):
     except ValueError:
         print("Please enter a valid task number.")
         return None
+    except EOFError:
+        print()
+        return None
     if not 0 <= index < len(tasks):
         print("Task number is out of range.")
         return None
