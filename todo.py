@@ -8,6 +8,9 @@ Usage:
 Choose from the menu to view, add, complete, or delete tasks.
 """
 
+import json
+from pathlib import Path
+
 TASKS_FILE = Path(__file__).with_name("tasks.json")
 
 def load_tasks():
