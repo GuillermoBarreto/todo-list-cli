@@ -87,8 +87,8 @@ def main():
         print("\n1. View Tasks\n2. Add Task\n3. Complete Task\n4. Delete Task\n5. Exit")
         try:
             choice = input("Choose: ").strip()
-        except EOFError:
-            # Ctrl+D or ended piped input: exit cleanly instead of a traceback.
+        except (EOFError, KeyboardInterrupt):
+            # Ctrl+D / Ctrl+C or ended piped input: exit cleanly instead of a traceback.
             print()
             break
         if choice == "1":
