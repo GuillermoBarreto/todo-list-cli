@@ -17,10 +17,17 @@ def load_tasks():
     if TASKS_FILE.exists():
         try:
             with TASKS_FILE.open("r", encoding="utf-8") as file:
-                return json.load(file)
+                data = json.load(file)
         except json.JSONDecodeError:
             print("Warning: tasks.json is corrupted. Starting with an empty task list.")
             return []
+        if not isinstance(data, list):
+            print("Warning: tasks.json does not contain a task list. Starting with an empty task list.")
+            return []
+        tasks = [task for task in data if isinstance(task, dict)]
+        if len(tasks) != len(data):
+            print("Warning: tasks.json contained invalid entries; they were skipped.")
+        return tasks
     return []
 
 def save_tasks(tasks):
