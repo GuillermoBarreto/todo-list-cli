@@ -32,7 +32,7 @@ def load_tasks():
 
 def save_tasks(tasks):
     try:
-        with TASKS_FILE.open("w") as file:
+        with TASKS_FILE.open("w", encoding="utf-8") as file:
             json.dump(tasks, file, indent=4)
     except OSError as exc:
         print(f"Warning: could not save tasks.json: {exc}")
