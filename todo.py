@@ -96,7 +96,8 @@ def delete_task(tasks):
         return
     removed = tasks.pop(index)
     save_tasks(tasks)
-    print(f"Deleted: {removed.get('title', '(untitled)') if isinstance(removed, dict) else removed}")
+    # load_tasks() guarantees every entry is a dict, so no type check is needed.
+    print(f"Deleted: {removed.get('title', '(untitled)')}")
 
 def main():
     tasks = load_tasks()
