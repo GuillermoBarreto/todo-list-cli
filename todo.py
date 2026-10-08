@@ -48,7 +48,12 @@ def show_tasks(tasks):
         print(f"{i + 1}. [{status}] {task.get('title', '(untitled)')}")
 
 def add_task(tasks):
-    title = input("Enter task: ").strip()
+    try:
+        title = input("Enter task: ").strip()
+    except EOFError:
+        # Ctrl+D at the prompt: leave the action instead of a traceback.
+        print()
+        return
     if not title:
         print("Task cannot be empty.")
         return
@@ -91,7 +96,8 @@ def delete_task(tasks):
         return
     removed = tasks.pop(index)
     save_tasks(tasks)
-    print(f"Deleted: {removed.get('title', '(untitled)') if isinstance(removed, dict) else removed}")
+    # load_tasks() guarantees every entry is a dict, so no type check is needed.
+    print(f"Deleted: {removed.get('title', '(untitled)')}")
 
 def main():
     tasks = load_tasks()
