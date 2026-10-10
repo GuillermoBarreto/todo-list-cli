@@ -18,10 +18,11 @@ def load_tasks():
         try:
             with TASKS_FILE.open("r", encoding="utf-8") as file:
                 data = json.load(file)
-        except (json.JSONDecodeError, UnicodeDecodeError):
-            # UnicodeDecodeError: the file has non-UTF-8 bytes and cannot be
-            # decoded at all; treat it like any other corrupt data file.
-            print("Warning: tasks.json is corrupted. Starting with an empty task list.")
+        except (json.JSONDecodeError, UnicodeDecodeError, OSError) as exc:
+            # OSError: the file exists but can't be read (e.g. it's a
+            # directory, or permissions changed). Treat like corrupt data
+            # instead of crashing with a traceback.
+            print(f"Warning: could not read tasks.json ({exc}). Starting with an empty task list.")
             return []
         if not isinstance(data, list):
             print("Warning: tasks.json does not contain a task list. Starting with an empty task list.")
