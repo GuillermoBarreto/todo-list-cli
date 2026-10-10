@@ -34,11 +34,14 @@ def load_tasks():
     return []
 
 def save_tasks(tasks):
+    """Write tasks to disk. Returns True on success, False when the write failed."""
     try:
         with TASKS_FILE.open("w", encoding="utf-8") as file:
             json.dump(tasks, file, indent=4)
     except OSError as exc:
         print(f"Warning: could not save tasks.json: {exc}")
+        return False
+    return True
 
 def show_tasks(tasks):
     if not tasks:
@@ -59,8 +62,9 @@ def add_task(tasks):
         print("Task cannot be empty.")
         return
     tasks.append({"title": title, "done": False})
-    save_tasks(tasks)
-    print("Task added!")
+    if save_tasks(tasks):
+        print("Task added!")
+    # On failure save_tasks() already warned; don't claim success.
 
 def choose_task(tasks, prompt):
     show_tasks(tasks)
@@ -88,17 +92,18 @@ def complete_task(tasks):
         print("Task is already complete.")
         return
     tasks[index]["done"] = True
-    save_tasks(tasks)
-    print("Task marked as done!")
+    if save_tasks(tasks):
+        print("Task marked as done!")
 
 def delete_task(tasks):
     index = choose_task(tasks, "Enter task number to delete: ")
     if index is None:
         return
     removed = tasks.pop(index)
-    save_tasks(tasks)
+    saved = save_tasks(tasks)
     # load_tasks() guarantees every entry is a dict, so no type check is needed.
-    print(f"Deleted: {removed.get('title', '(untitled)')}")
+    if saved:
+        print(f"Deleted: {removed.get('title', '(untitled)')}")
 
 def main():
     tasks = load_tasks()
