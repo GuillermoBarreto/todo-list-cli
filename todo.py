@@ -103,6 +103,9 @@ def complete_task(tasks):
     tasks[index]["done"] = True
     if save_tasks(tasks):
         print("Task marked as done!")
+    else:
+        # The file kept the old state; roll back so memory matches the disk.
+        tasks[index]["done"] = False
 
 def delete_task(tasks):
     """Remove the chosen task and save; restoring it if the save fails."""
@@ -114,6 +117,9 @@ def delete_task(tasks):
     # load_tasks() guarantees every entry is a dict, so no type check is needed.
     if saved:
         print(f"Deleted: {removed.get('title', '(untitled)')}")
+    else:
+        # The file still has the task; restore it in memory too.
+        tasks.insert(index, removed)
 
 def main():
     """Run the interactive menu loop until the user exits (or sends EOF)."""
