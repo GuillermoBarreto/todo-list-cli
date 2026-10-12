@@ -14,6 +14,11 @@ from pathlib import Path
 TASKS_FILE = Path(__file__).with_name("tasks.json")
 
 def load_tasks():
+    """Load tasks from tasks.json.
+
+    Returns a list of task dicts. Corrupt, unreadable, or non-list files
+    produce a warning and an empty list instead of crashing.
+    """
     if TASKS_FILE.exists():
         try:
             with TASKS_FILE.open("r", encoding="utf-8") as file:
@@ -44,6 +49,7 @@ def save_tasks(tasks):
     return True
 
 def show_tasks(tasks):
+    """Print the numbered task list, or a friendly note when it is empty."""
     if not tasks:
         print("No tasks yet!")
         return
@@ -52,6 +58,7 @@ def show_tasks(tasks):
         print(f"{i + 1}. [{status}] {task.get('title', '(untitled)')}")
 
 def add_task(tasks):
+    """Prompt for a task title, append it, and save. Ctrl+D cancels cleanly."""
     try:
         title = input("Enter task: ").strip()
     except EOFError:
@@ -67,6 +74,7 @@ def add_task(tasks):
     # On failure save_tasks() already warned; don't claim success.
 
 def choose_task(tasks, prompt):
+    """Prompt for a 1-based task number; return its 0-based index or None."""
     show_tasks(tasks)
     if not tasks:
         return None
@@ -85,6 +93,7 @@ def choose_task(tasks, prompt):
 
 
 def complete_task(tasks):
+    """Mark the chosen task done and save; already-done tasks are skipped."""
     index = choose_task(tasks, "Enter task number to complete: ")
     if index is None:
         return
@@ -96,6 +105,7 @@ def complete_task(tasks):
         print("Task marked as done!")
 
 def delete_task(tasks):
+    """Remove the chosen task and save; restoring it if the save fails."""
     index = choose_task(tasks, "Enter task number to delete: ")
     if index is None:
         return
@@ -106,6 +116,7 @@ def delete_task(tasks):
         print(f"Deleted: {removed.get('title', '(untitled)')}")
 
 def main():
+    """Run the interactive menu loop until the user exits (or sends EOF)."""
     tasks = load_tasks()
     while True:
         print("\n1. View Tasks\n2. Add Task\n3. Complete Task\n4. Delete Task\n5. Exit")
